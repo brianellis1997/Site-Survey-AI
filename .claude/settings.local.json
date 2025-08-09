@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(pip install:*)",
+      "Bash(conda activate:*)",
+      "Bash(conda info:*)",
+      "Bash(conda install:*)",
+      "Bash(python:*)",
+      "Bash(curl:*)"
+    ],
+    "deny": []
+  }
+}
