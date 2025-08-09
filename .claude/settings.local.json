@@ -9,7 +9,15 @@
       "Bash(conda info:*)",
       "Bash(conda install:*)",
       "Bash(python:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(true)",
+      "Bash(pkill:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(conda create:*)",
+      "Bash(source:*)",
+      "Bash(lsof:*)",
+      "Bash(echo)"
     ],
     "deny": []
   }
