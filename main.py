@@ -12,11 +12,14 @@ from pathlib import Path
 from typing import Optional, List
 
 import uvicorn
+import io
+import uuid
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from PIL import Image
 
 # Import configuration
 try:
@@ -39,9 +42,6 @@ ml_import_error = None
 try:
     from src.site_survey_ai.agents.survey_workflow import SurveyAnalysisWorkflow
     from src.site_survey_ai.database.vector_store import VectorStore
-    from PIL import Image
-    import io
-    import uuid
 except ImportError as e:
     ml_dependencies_available = False
     ml_import_error = str(e)
@@ -219,9 +219,30 @@ async def analyze_survey(
                 )
             
             # Read and convert to PIL Image
-            image_data = await image_file.read()
-            pil_image = Image.open(io.BytesIO(image_data))
-            pil_images.append(pil_image)
+            try:
+                image_data = await image_file.read()
+                logger.info(f"Read {len(image_data)} bytes from {image_file.filename}")
+                
+                # Create PIL Image from bytes
+                image_bytes = io.BytesIO(image_data)
+                pil_image = Image.open(image_bytes)
+                
+                # Convert to RGB if needed (handles RGBA, grayscale, etc.)
+                if pil_image.mode != 'RGB':
+                    pil_image = pil_image.convert('RGB')
+                
+                # Verify image is valid by loading it
+                pil_image.load()
+                
+                pil_images.append(pil_image)
+                logger.info(f"Successfully processed image: {image_file.filename} ({pil_image.size})")
+                
+            except Exception as e:
+                logger.error(f"Error processing image {image_file.filename}: {e}")
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Error processing image {image_file.filename}: {str(e)}"
+                )
         
         # Generate survey ID if not provided
         if not survey_id:
