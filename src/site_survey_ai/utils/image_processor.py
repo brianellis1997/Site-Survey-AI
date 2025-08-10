@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
@@ -46,7 +46,7 @@ class ImageProcessor:
         
         # Enhance contrast using CLAHE (Contrast Limited Adaptive Histogram Equalization)
         lab = cv2.cvtColor(img_array, cv2.COLOR_RGB2LAB)
-        lab_planes = cv2.split(lab)
+        lab_planes = list(cv2.split(lab))
         
         clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
         lab_planes[0] = clahe.apply(lab_planes[0])

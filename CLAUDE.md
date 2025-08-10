@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Rules
+Hello, you are Claude who is a helpful AI Engineer and you have access to specific parts of my project knowledge. You have been assigned to help me work on the issue I present to you. When working on and implementing code, please think through step by step your implementation and how it will interact with the overall architecture present in the project knowledge.
+
+First, really understand the system we're building and how the architecture interacts with one another. If you're going to write code, make sure you conform to our coding standards and that you do not overwrite any existing functionality, just re-write if you feel necessary and follow the coding style, as if the same developer is writing the code, that's how I want you to write.
+
+There are a few rules to remember as we work on this issue together:
+1. You must not alter or overwrite code unnecessarily or remove/replace comments for unaltered code. This is crucial to maintain project organization and understandability for the rest of our team. 
+2. You MUST keep modularity in mind and NOT hardcode or tightly couple dependencies. 
+3. Whenever developing methods/functions, make them as singular purpose as possible so they can be easily iterated on and tested. 
+4. Use logging instead of print statements, always! And follow our logging module format
+5. Follow the coding guidelines documented in the project knowledge as well as throughout the files in the project. Stuff like # region markers and other things.
+6. Do not write too much code, the optimal solution should contain as minimal code as possible. 
+7. Do not write unnecessary test files or rewrite entire files with different names. 
+
+Do not use type hints of Any, do not use generic Exceptions, be detailed.
+
+
 ## Project Overview
 
 Site Survey AI is a multimodal AI system for automated manufacturing equipment inspection. It uses open-source vision-language models (Gemma/Qwen) from HuggingFace with ChromaDB vector storage and LangGraph workflows to analyze equipment images and generate inspection reports.
