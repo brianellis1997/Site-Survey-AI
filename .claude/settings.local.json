@@ -17,7 +17,15 @@
       "Bash(conda create:*)",
       "Bash(source:*)",
       "Bash(lsof:*)",
-      "Bash(echo)"
+      "Bash(echo)",
+      "Bash(timeout:*)",
+      "Bash(pip cache:*)",
+      "Bash(conda uninstall:*)",
+      "Bash(ARCHFLAGS=\"-arch arm64\" pip install ormsgpack --compile --no-cache-dir)",
+      "Bash(ARCHFLAGS=\"-arch arm64\" pip install --target /Users/bdogellis/miniforge3/envs/survey-ai/lib/python3.11/site-packages ormsgpack --compile --no-cache-dir --force-reinstall)",
+      "Bash(claude mcp add gemini -s user:*)",
+      "Bash(claude mcp:*)",
+      "Bash(kill:*)"
     ],
     "deny": []
   }

@@ -1,9 +1,17 @@
-from typing import List, Dict, Any, TypedDict, Annotated
+"""
+Site Survey AI - Survey Analysis Workflow
+
+This module implements the main analysis workflow using LangGraph for
+orchestrating a multi-step site survey inspection process.
+"""
+
+from typing import List, Dict, Any, TypedDict, Annotated, Optional
 import operator
-from langgraph.graph import StateGraph, END
-from langchain.schema import BaseMessage, HumanMessage
-from PIL import Image
 import logging
+import re
+import uuid
+from langgraph.graph import StateGraph, END
+from PIL import Image
 
 from ..models.multimodal_model import MultimodalModel
 from ..database.vector_store import VectorStore
@@ -13,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class SurveyState(TypedDict):
+    """State definition for the survey analysis workflow."""
     images: List[Image.Image]
     text_notes: str
     survey_id: str
@@ -24,11 +33,23 @@ class SurveyState(TypedDict):
 
 
 class SurveyAnalysisWorkflow:
-    def __init__(self):
+    """
+    Main workflow orchestrator for site survey analysis.
+    
+    Implements a 5-step analysis pipeline using LangGraph:
+    1. Image preprocessing
+    2. Component-level analysis
+    3. Historical survey retrieval
+    4. Report generation
+    5. Validation and scoring
+    """
+    
+    def __init__(self) -> None:
+        """Initialize the workflow with required components."""
         self.multimodal_model = MultimodalModel()
         self.vector_store = VectorStore()
         self.image_processor = ImageProcessor()
-        self.workflow = None
+        self.workflow: Optional[StateGraph] = None
         
     async def initialize(self):
         await self.multimodal_model.load_model()
@@ -208,13 +229,12 @@ class SurveyAnalysisWorkflow:
         if "STATUS: PASS" in validation_result.upper():
             overall_status = "pass"
         
-        # Extract confidence score (basic regex could be added here)
+        # Extract confidence score using regex
         try:
-            import re
             conf_match = re.search(r"CONFIDENCE:\s*([0-9.]+)", validation_result)
             if conf_match:
                 confidence_score = float(conf_match.group(1))
-        except:
+        except (ValueError, AttributeError):
             pass
         
         return {
@@ -226,12 +246,22 @@ class SurveyAnalysisWorkflow:
         self,
         images: List[Image.Image],
         text_notes: str = "",
-        survey_id: str = None
+        survey_id: Optional[str] = None
     ) -> Dict[str, Any]:
+        """
+        Run the complete survey analysis workflow.
+        
+        Args:
+            images: List of PIL Images to analyze
+            text_notes: Optional text notes for additional context
+            survey_id: Optional survey identifier, generated if not provided
+            
+        Returns:
+            Complete analysis results with status, report, and confidence
+        """
         if not self.workflow:
             await self.initialize()
         
-        import uuid
         if not survey_id:
             survey_id = str(uuid.uuid4())
         

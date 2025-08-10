@@ -35,4 +35,5 @@ sentence-transformers>=2.2.2
 # Utilities
 python-dotenv>=1.0.0
 pydantic>=2.4.0
+pydantic-settings>=2.0.0
 requests>=2.31.0
