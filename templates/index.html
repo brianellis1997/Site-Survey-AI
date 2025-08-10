@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Survey AI - Test Interface</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Site Survey AI</h1>
+            <p>Upload site survey images and analyze equipment status</p>
+        </header>
+
+        <div class="upload-section">
+            <h2>Site Survey Analysis</h2>
+            <form id="survey-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="images">Select Equipment Images:</label>
+                    <input type="file" id="images" name="images" multiple accept="image/*" required>
+                    <small>Select multiple images from your site survey</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Engineer Notes (optional):</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Enter any observations, measurements, or concerns noted during the survey..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="survey-id">Survey ID (optional):</label>
+                    <input type="text" id="survey-id" name="survey_id" placeholder="e.g., SURVEY-2025-001">
+                </div>
+
+                <button type="submit" id="analyze-btn">
+                    <span id="btn-text">🔍 Analyze Equipment</span>
+                    <span id="loading" class="loading" style="display: none;">⏳ Analyzing...</span>
+                </button>
+            </form>
+        </div>
+
+        <div id="results-section" class="results-section" style="display: none;">
+            <h2>Analysis Results</h2>
+            <div id="results-content"></div>
+        </div>
+
+        <div class="info-section">
+            <h3>System Status</h3>
+            <div id="system-status">Loading...</div>
+        </div>
+
+        <div class="stats-section">
+            <h3>Database Statistics</h3>
+            <div id="db-stats">Loading...</div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

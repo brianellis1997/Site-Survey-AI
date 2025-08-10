@@ -12,9 +12,11 @@ from pathlib import Path
 from typing import Optional, List
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 # Import configuration
 try:
@@ -64,6 +66,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files and templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
 # Global instances (only if ML dependencies are available)
 survey_workflow: Optional[object] = None
 vector_store: Optional[object] = None
@@ -101,9 +107,14 @@ async def startup_event():
         logger.info(f"   Reason: {ml_import_error}")
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
+async def web_interface(request: Request):
+    """Main web interface for testing the system"""
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/api")
 async def root():
-    """Health check endpoint"""
+    """API health check endpoint"""
     return {
         "message": "Site Survey AI is running",
         "version": "0.1.0",
